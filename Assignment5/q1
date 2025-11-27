@@ -1,0 +1,166 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int x) {
+        data = x;
+        next = NULL;
+    }
+};
+
+class LinkedList {
+public:
+    Node* head;
+
+    LinkedList() {
+        head = NULL;
+    }
+
+    void insertBeginning(int x) {
+        Node* n = new Node(x);
+        n->next = head;
+        head = n;
+    }
+
+    void insertEnd(int x) {
+        Node* n = new Node(x);
+        if (head == NULL) {
+            head = n;
+            return;
+        }
+        Node* t = head;
+        while (t->next != NULL) t = t->next;
+        t->next = n;
+    }
+
+    void insertBefore(int val, int x) {
+        if (head == NULL) return;
+        if (head->data == val) {
+            insertBeginning(x);
+            return;
+        }
+        Node* t = head;
+        while (t->next != NULL && t->next->data != val) t = t->next;
+        if (t->next == NULL) return;
+        Node* n = new Node(x);
+        n->next = t->next;
+        t->next = n;
+    }
+
+    void insertAfter(int val, int x) {
+        Node* t = head;
+        while (t != NULL && t->data != val) t = t->next;
+        if (t == NULL) return;
+        Node* n = new Node(x);
+        n->next = t->next;
+        t->next = n;
+    }
+
+    void deleteBeginning() {
+        if (head == NULL) return;
+        Node* t = head;
+        head = head->next;
+        delete t;
+    }
+
+    void deleteEnd() {
+        if (head == NULL) return;
+        if (head->next == NULL) {
+            delete head;
+            head = NULL;
+            return;
+        }
+        Node* t = head;
+        while (t->next->next != NULL) t = t->next;
+        delete t->next;
+        t->next = NULL;
+    }
+
+    void deleteValue(int val) {
+        if (head == NULL) return;
+        if (head->data == val) {
+            deleteBeginning();
+            return;
+        }
+        Node* t = head;
+        while (t->next != NULL && t->next->data != val) t = t->next;
+        if (t->next == NULL) return;
+        Node* temp = t->next;
+        t->next = temp->next;
+        delete temp;
+    }
+
+    void search(int val) {
+        Node* t = head;
+        int pos = 1;
+        while (t != NULL) {
+            if (t->data == val) {
+                cout << "Found at position " << pos << endl;
+                return;
+            }
+            pos++;
+            t = t->next;
+        }
+        cout << "Not found\n";
+    }
+
+    void display() {
+        Node* t = head;
+        while (t != NULL) {
+            cout << t->data << " ";
+            t = t->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    LinkedList l;
+    int choice, val, x;
+
+    while (true) {
+        cout << "\n1 Insert Beginning\n2 Insert End\n3 Insert Before\n4 Insert After\n5 Delete Beginning\n6 Delete End\n7 Delete Value\n8 Search\n9 Display\n10 Exit\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cin >> val;
+                l.insertBeginning(val);
+                break;
+            case 2:
+                cin >> val;
+                l.insertEnd(val);
+                break;
+            case 3:
+                cin >> val >> x;
+                l.insertBefore(val, x);
+                break;
+            case 4:
+                cin >> val >> x;
+                l.insertAfter(val, x);
+                break;
+            case 5:
+                l.deleteBeginning();
+                break;
+            case 6:
+                l.deleteEnd();
+                break;
+            case 7:
+                cin >> val;
+                l.deleteValue(val);
+                break;
+            case 8:
+                cin >> val;
+                l.search(val);
+                break;
+            case 9:
+                l.display();
+                break;
+            case 10:
+                return 0;
+        }
+    }
+}
